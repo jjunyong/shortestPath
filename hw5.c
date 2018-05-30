@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stddef.h>
+#include <time.h>
 
 #define numOfVertex 10
 
@@ -14,7 +15,7 @@ typedef struct Edge{
 int d[10];
 int parent[10];
 int visited[10];
-Edge edge[50];
+Edge edge[200];
 
 void relax(u, v, weight){
 	if(d[v] > d[u]+weight){
@@ -76,7 +77,6 @@ int Bellman_Ford(int source, int size){
 	int j;
 	int s = source;
 	int sum = 0;	
-//	int size=0;
 	
 	for(i=0;i<10;i++){
 		d[i] = 10000;
@@ -88,34 +88,56 @@ int Bellman_Ford(int source, int size){
 	}
 	
 	for(i=0;i<9;i++){
-//		while(sum < 32){			
 		for(j=0;j<size;j++){
 			relax(edge[j].vertex[0],edge[j].vertex[1],edge[j].weight);
-		//	edge[j].visited = 1;
-		//	sum += edge[j].visited;
-		//	size++;
-		//	printf("%d ", sum);
 		}	
 	}
 	sum=0;
 	size=0;
 
-	for(i=0;i<50;i++){
+	for(i=0;i<size;i++){
 		edge[i].visited = 0;
 	}
 
-//	for(i=0;i<32;i++) printf("%d ",edge[i].visited);
-
-	//while(sum != 32){			
 	for(i=0;i<size;i++){
 		if( d[ edge[i].vertex[1] ] > (d[ edge[i].vertex[0] ] + edge[i].weight) )
 			return 0;
 		edge[i].visited = 1;
 		sum += edge[i].visited;
-//		size++;
 	}	
 
 	return 1;
+}
+
+void Floyd(int matrix[][11]){
+
+	int i,j,k;
+	int D[10][10];
+
+	for(i=0;i<10;i++){
+		for(j=0;j<10;j++){
+			D[i][j] = matrix[i+1][j+1];
+		}
+	}
+
+
+	for(i=0;i<10;i++){
+		for(j=0;j<10;j++){
+			for(k=0;k<10;k++){	
+				if(D[j][i] + D[i][k] < D[j][k]){
+					D[j][k] = D[j][i] + D[i][k];
+				}		
+			}
+		}
+	}
+
+	for(i=0;i<10;i++){
+		for(j=0;j<10;j++){
+			printf("%d ",D[i][j]);
+		}
+		printf("\n");
+	}
+	
 }
 
 int main() {
@@ -129,6 +151,7 @@ int main() {
 	char index[10][100]; //index for vertex name since we'll consider all vertex as integer in the program.
 	int i;
 	int j;
+	int cnt=0;
 
 	if( fp != NULL )
 	{
@@ -143,6 +166,7 @@ int main() {
 				strcpy(storage[i][j], token);
 				if(i==0){
 					strcpy(index[j],token);
+					cnt++;
 				}
 				token = strtok(NULL, " \t\n\v\f\r");
 				j++;
@@ -185,6 +209,8 @@ int main() {
 		printf("\n");
 	}*/
 
+	clock_t begin = clock();
+	printf("Dijkstra Algorithm Applied |V| times: \n\n");	
 	/* Apply dijkstra |V| times */
 	for(i=0;i<10;i++){
 		dijkstra(matrix,i);
@@ -194,15 +220,11 @@ int main() {
 		printf("\n");
 	}
 
-	/* Apply Bellman-Ford |V| times */
-/*	for(i=0;i<10;i++){
-		Bellman_Ford(matrix,i);
-		for(j=0;j<10;j++){
-			printf("%d ",d[j]);
-		}
-		printf("\n");
-	}*/
+	clock_t end = clock();
 
+	printf("------------------------------------------------\n");
+	printf("Dijkstra time spent : %fseconds \n",(double)(end-begin)/1000);
+	printf("------------------------------------------------\n");
 	/* Calculate Edges and its weight from Adj.Matrix */
 	int size = 0;
 	int k=2;
@@ -217,38 +239,43 @@ int main() {
 				edge[size].vertex[0] = j-1;
 				edge[size].weight = matrix[i][j];
 				size++;
-				
 			}
 		}
 		k++;
 	}	
-
 	// Check if edges are calculated well 
-	for(i=0;i<size;i++){
+/*	for(i=0;i<size;i++){
 		printf("edge: (%d,%d) ",edge[i].vertex[0], edge[i].vertex[1]);
 		printf("weight: %d\n",edge[i].weight);	
-	}
+	}*/
 	
+	begin = clock();
+	printf("Bellman-Ford Alogirhtm Applied |V| times: \n\n");
+	/* Apply Bellman-Ford |V| times */
 	for(i=0;i<10;i++){
-		Bellman_Ford(i,size);
-		for(j=0;j<10;j++){
-			printf("%d ",d[j]);	
-		}	
-		printf("\n");
-	}
-/*	for(i=0;i<10;i++){
-		if( Bellman_Ford(matrix,i) == 1){
+		if(Bellman_Ford(i,size)){
 			for(j=0;j<10;j++){
-				printf("%d ",d[j]);
-			}
+				printf("%d ",d[j]);	
+			}	
+			printf("\n");
 		}
 		else{
 			printf("negative cycle exists when source is %d!\n",i);
 		}
-		printf("\n");
-	}*/
+	}
+	end = clock();
+	printf("------------------------------------------------\n");
+	printf("Bellman-Ford time spent : %fseconds \n",(double)(end-begin)/1000);
+	printf("------------------------------------------------\n");
 
-	/* Applly Floyd */
-//	Floyd(matrix);
+	begin = clock();
+	printf("Floyd Algorithm Applied :\n\n");	
+	/* Applly Floyd Algirhtm*/
+	Floyd(matrix);
+	end = clock();
+	printf("------------------------------------------------\n");
+	printf("Floyd time spent : %fseconds \n",(double)(end-begin)/1000);
+	printf("------------------------------------------------\n");
+	
 	return 0;
 }
