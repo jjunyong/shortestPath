@@ -6,6 +6,7 @@
 
 int d[10];
 int parent[10];
+int visited[10];
 
 void relax(u, v, weight){
 	if(d[v] > d[u]+weight){
@@ -13,20 +14,56 @@ void relax(u, v, weight){
 		parent[v] = u;	
 	}
 }	
+
 void dijkstra(int matrix[][11], int source){
 	
 	int i;
+	int j;
 	int s = source;
+	int u;
+	int sum = 0;	
+
 	for(i=0;i<10;i++){
 		d[i] = 10000;
 	}
 	d[s] = 0;
-
-	for(i=0;i<10;i++){
-		if(matrix[s+1][i+1]>0 && matrix[s+1][i+1]<10000)
-			relax(s, i, matrix[s+1][i+1]);
-	}
 	
+	for(i=0;i<10;i++)
+		visited[i] = 0;
+
+	
+	//for(i=0;i<10;i++) Q[i] = i;
+	int idx;
+	while(sum != 10){
+	
+//		int min = 0;
+		for(i=0;i<10;i++){
+			if(visited[i]==0){
+				int min = d[i];
+				for(j=0;j<10;j++){
+					if(visited[j]==0){
+						if(min >= d[j]){
+							min = d[j];
+							idx = j;
+						}
+
+					}
+				}
+			}
+		}
+		visited[idx] = 1;
+		u = idx;
+		
+//		printf("%d \n",u);
+		
+		for(i=0;i<10;i++){
+			if(matrix[u+1][i+1]>0 && matrix[u+1][i+1]<10000)
+				relax(u, i, matrix[u+1][i+1]);
+		}
+
+		sum += visited[idx]; 
+	
+	}
 //	for(i=0;i<10;i++) printf("%d ",d[i]);
 }
 
@@ -90,6 +127,7 @@ int main() {
 	for(i=1;i<11;i++)
 		matrix[i][0] = i-1;
 
+
 /*	for(i=0;i<11;i++){
 		for(j=0;j<11;j++){
 			if(i==0 && j==0) continue;
@@ -98,14 +136,14 @@ int main() {
 		printf("\n");
 	}*/
 
-//	for(i=0;i<10;i++)
-		dijkstra(matrix,0);
-	for(i=0;i<10;i++)
-		printf("%d ",d[i]);
 
-
-
-
+	for(i=0;i<10;i++){
+		dijkstra(matrix,i);
+		for(j=0;j<10;j++){
+			printf("%d ",d[j]);
+		}
+		printf("\n");
+	}
 
 	return 0;
 }
