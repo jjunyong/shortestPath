@@ -160,7 +160,7 @@ void Floyd(int matrix[][30]){
 int main() {
 
 	FILE *fp ; //파일 포인터
-        fp = fopen("test.data","r");
+        fp = fopen("hw5.data","r");
 
         char storage[30][30][100];
 	char * token;
@@ -189,6 +189,7 @@ int main() {
 			}
 			i++;		
 		}
+		fclose(fp);
 	}
 
 //	for(i=0;i<11;i++) printf("%s\n",index[i]);
@@ -223,7 +224,6 @@ int main() {
 		printf("\n");
 	}*/
 
-	clock_t begin = clock();
 	printf("Dijkstra Algorithm Applied |V| times: \n\n");	
 	/* Apply dijkstra |V| times */
 
@@ -233,6 +233,8 @@ int main() {
 	}
 	printf("\n");
 
+	
+	clock_t begin = clock();
 	for(i=0;i<vNum+1;i++){
 
 		if(i==0)
@@ -281,7 +283,6 @@ int main() {
 		printf("weight: %d\n",edge[i].weight);	
 	}*/
 	
-	begin = clock();
 	printf("Bellman-Ford Alogirhtm Applied |V| times: \n\n");
 	/* Apply Bellman-Ford |V| times */
 
@@ -291,6 +292,7 @@ int main() {
 	}
 	printf("\n");
 
+	begin = clock();
 	for(i=0;i<vNum+1;i++){
 
 		if(i==0)
@@ -317,9 +319,9 @@ int main() {
 	printf("Bellman-Ford time spent : %fseconds \n",(double)(end-begin)/1000);
 	printf("------------------------------------------------\n");
 
-	begin = clock();
 	printf("Floyd Algorithm Applied :\n\n");	
 	/* Applly Floyd Algirhtm*/
+	begin = clock();
 	Floyd(matrix);
 	end = clock();
 	printf("------------------------------------------------\n");
