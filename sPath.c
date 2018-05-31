@@ -4,7 +4,6 @@
 #include <stddef.h>
 #include <time.h>
 
-
 typedef struct Edge{
 	int vertex[2];
 	int weight;

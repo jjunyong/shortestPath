@@ -15,7 +15,7 @@ This repository provides Makefile to build program
 3. Cleaning binary files of current directory can be done by : <br>
 <code> $ ./make clean </code>
 
-* *If you want to use different input file, you only need to modify input file name in scc.c file.*
+* *If you want to use different input file, you only need to modify input file name in sPath.c file.*
 
 ### Screen shots ###
 1. First screesnshot shows result of shortestPath and its running time, when Dikjstra algorithm is applied |V| times.
